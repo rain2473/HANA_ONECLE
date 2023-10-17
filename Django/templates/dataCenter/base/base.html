@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <title>하나원클 데이터센터</title>
+        <link rel="shortcut icon" href="{% static 'img/logo2.png' %}" type="image/x-icon">
+        <link rel="stylesheet" href="{% static 'style/style.css' %}" type="text/css">
+        <link rel="stylesheet"  href="{% static 'style/rollingbanner-js.css' %}" type="text/css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+        <script> const rollingbanner = "{% static 'json/rollingbanner.json' %}"; </script>
+        <script src="{% static 'javascript/rollingbanner.js' %}"></script>
+        <script src="{% static 'javascript/base.js' %}"></script>
+        <script src="{% static 'javascript/chartMaker.js' %}"></script>
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    </head>
+    <body>
+        <header>
+            {% include "dataCenter/include/header.html" %}
+        </header>
+        <main>
+            <div class="wrapper pages">
+                <div class="page">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </div>
+            <span id="top_button">
+                <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                    <title>scrollTopFixed</title>
+                    <path class="arrow-path" d="M268 112l144 144-144 144M392 256H100" />
+                </svg>
+            </span>
+        </main>
+        <!-- <footer>
+            {% include "dataCenter/include/footer.html" %}
+        </footer> -->
+        <script type="text/javascript">
+            rollingBanner();
+            baseFunction();
+        </script>
+    </body>
+</html>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hanaonecle.trading.model.dao.TradingMapper">
+    <select id="findStockByIsin" parameterType="string" resultType="com.hanaonecle.trading.model.dto.PriceInfo">
+        SELECT work_dt as time, open, close, high, low FROM ohlcv where isin = #{isin} order by work_dt
+    </select>
+
+    <select id="findStockNameByIsin" parameterType="string" resultType="string">
+        SELECT name FROM stock where isin = #{isin}
+    </select>
+
+    <select id="getScoreByIsin" parameterType="string" resultType="com.hanaonecle.trading.model.dto.ScoreInfo">
+        select PRICE_SCORE as priceScore, UPDOWN_SCORE as updownScore, MENTION_SCORE as mentionScore, POSITIVE_SCORE as positiveScore, RSI_SCORE as rsiScore, OBV_SCORE as obvScore, STOCHASTIC_SCORE as stochasticScore, MOMENTUM_SCORE as momentumScore from ONECLE_SCORE where work_dt = (SELECT max(work_dt) FROM work_date) and isin = #{isin}
+    </select>
+
+    <select id="stocksInBalance" parameterType="com.hanaonecle.trading.model.dto.ExistRequest" resultType="int">
+        select COALESCE(sum(bal_volume), 0) AS bal_volume from balance where isin = #{isin} and acc_id = (select acc_id from account where one_id = #{one_id})
+    </select>
+
+    <select id="stockSearching" parameterType="String" resultType="com.hanaonecle.trading.model.dto.Stock">
+        select isin, name from stock where isin like #{inpit} or name like #{inpit} order by name asc
+    </select>
+
+    <select id="getReceiveForTransaction" parameterType="string" resultType="com.hanaonecle.trading.model.dto.RecievedInfo">
+        select DEPOSIT_RECEIVED from account where one_id = #{one_id}
+    </select>
+
+    <insert id="insertNewOrderHistory" parameterType="com.hanaonecle.trading.model.dto.OrderRequest">
+        insert into ORDER_REQUEST (ODR_ID, ACC_ID, ISIN, WORK_DT, ORDER_PRICE, ORDER_VOLUME, ORDER_TYPE, ORDER_RESULT) values ((select nvl(max(ODR_ID) + 1, 0) as odr_id from order_request), (select acc_id from account where one_id = #{oneId}), #{isin}, #{workDt}, #{orderPrice}, #{orderVolume}, #{orderType}, 1)
+    </insert>
+
+    <insert id="insertNewConclusionHistory" parameterType="com.hanaonecle.trading.model.dto.OrderRequest">
+        insert into CONCLUSION (CON_ID, ACC_ID, ISIN, WORK_DT, CON_PRICE, CON_VOLUME, CON_TYPE, CON_RESULT) values ((select nvl(max(CON_ID) + 1, 0) as CON_ID from CONCLUSION), (select acc_id from account where one_id = #{oneId}), #{isin}, #{workDt}, #{orderPrice}, #{orderVolume}, #{orderType}, 1)
+    </insert>
+
+    <update id="updatePortfolio" parameterType="com.hanaonecle.trading.model.dto.PortfolioInput">
+        MERGE INTO portfolio
+            USING(
+                select #{work_dt} as work_dt, (select acc_id from account where one_id = #{one_id}) as acc_id, #{buy_amount} as buy_amount, #{value_amount} as value_amount, #{profit} as profit from dual) a
+            ON (portfolio.acc_id = a.acc_id and portfolio.work_dt = a.work_dt)
+            WHEN MATCHED THEN
+                UPDATE SET
+                    portfolio.buy_amount = portfolio.buy_amount + a.buy_amount,
+                    portfolio.profit = portfolio.bal_volume + a.profit,
+                    portfolio.value_amount = a.value_amount
+            WHEN NOT MATCHED THEN
+                INSERT (work_dt, acc_id, buy_amount, profit, value_amount) VALUES (a.work_dt, a.acc_id, a.buy_amount, a.profit, a.value_amount)
+    </update>
+
+    <update id="updateBalanceSell" parameterType="com.hanaonecle.trading.model.dto.OrderRequest">
+        MERGE INTO BALANCE
+            USING(
+                select #{isin} as isin, (select acc_id from account where one_id = #{oneId}) as acc_id, #{orderTotal} as bal_price, #{orderVolume} as bal_volume from dual) a
+            ON (BALANCE.acc_id = a.acc_id and BALANCE.isin = a.isin)
+            WHEN MATCHED THEN
+                UPDATE SET
+                    BALANCE.bal_price = BALANCE.bal_price - a.bal_price,
+                    BALANCE.bal_volume = BALANCE.bal_volume - a.bal_volume
+                    DELETE WHERE bal_volume = 0
+    </update>
+
+    <update id="updateAccountSell" parameterType="com.hanaonecle.trading.model.dto.OrderRequest">
+        update ACCOUNT set DEPOSIT_RECEIVED = DEPOSIT_RECEIVED + #{orderTotal} where one_id = #{oneId}
+    </update>
+
+    <update id="updateBalanceBuy" parameterType="com.hanaonecle.trading.model.dto.OrderRequest">
+        MERGE INTO BALANCE
+            USING(
+                select #{isin} as isin, (select acc_id from account where one_id = #{oneId}) as acc_id, #{orderTotal} as bal_price, #{orderVolume} as bal_volume from dual) a
+            ON (BALANCE.acc_id = a.acc_id and BALANCE.isin = a.isin)
+            WHEN MATCHED THEN
+                UPDATE SET
+                    BALANCE.bal_price = BALANCE.bal_price + a.bal_price,
+                    BALANCE.bal_volume = BALANCE.bal_volume + a.bal_volume
+            WHEN NOT MATCHED THEN
+                INSERT (isin, acc_id, bal_price, bal_volume) VALUES (a.isin, a.acc_id, a.bal_price, a.bal_volume)
+    </update>
+
+    <update id="updateAccountBuy" parameterType="com.hanaonecle.trading.model.dto.OrderRequest">
+        update ACCOUNT set DEPOSIT_RECEIVED = DEPOSIT_RECEIVED - #{orderTotal}, WITHDRAWAL_AVAILABLE = case
+            when DEPOSIT_RECEIVED - #{orderTotal} > WITHDRAWAL_AVAILABLE then WITHDRAWAL_AVAILABLE
+            else DEPOSIT_RECEIVED - #{orderTotal}
+            end
+        where one_id = #{oneId}
+    </update>
+</mapper>

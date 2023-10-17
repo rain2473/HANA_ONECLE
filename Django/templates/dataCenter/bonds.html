@@ -1,0 +1,152 @@
+{% extends 'dataCenter/base/list.html' %}
+{% load static %}
+{% block content %}
+<script>
+    const KR1Y = preprocessingJson('{{ KR1Y | escapejs }}');
+    const KR3Y = preprocessingJson('{{ KR3Y | escapejs }}');
+    const KR5Y = preprocessingJson('{{ KR5Y | escapejs }}');
+    const KR10Y = preprocessingJson('{{ KR10Y | escapejs }}');
+    const US10YY = preprocessingJson('{{ US10YY | escapejs }}');
+    const GM10YY = preprocessingJson('{{ GM10YY | escapejs }}');
+    const UK10YY = preprocessingJson('{{ UK10YY | escapejs }}');
+    const JP10YY = preprocessingJson('{{ JP10YY | escapejs }}');
+</script>
+<div class="page">
+    <div class="descript">
+        <h2>국채 시세 변화</h2>
+    </div>
+    <hr>
+    <div id="chart">
+        <div id = "bond" class="item big">
+            <div class="tab">
+                <div id="KR1Y" class="link-wrapper select" data-type="KR1Y">
+                    <p>국고채 1년</p>
+                    <span class="one"></span>
+                    <span class="two"></span>
+                    <span class="three"></span>
+                    <span class="four"></span>
+                </div>
+                <div id="KR3Y" class="link-wrapper select" data-type="KR3Y">
+                    <p>국고채 3년</p>
+                    <span class="one"></span>
+                    <span class="two"></span>
+                    <span class="three"></span>
+                    <span class="four"></span>
+                </div>
+                <div id="KR5Y" class="link-wrapper select" data-type="KR5Y">
+                    <p>국고채 5년</p>
+                    <span class="one"></span>
+                    <span class="two"></span>
+                    <span class="three"></span>
+                    <span class="four"></span>
+                </div>
+                <div id="KR10Y" class="link-wrapper select" data-type="KR10Y">
+                    <p>국고채 10년</p>
+                    <span class="one"></span>
+                    <span class="two"></span>
+                    <span class="three"></span>
+                    <span class="four"></span>
+                </div>
+                <div id="US10YY" class="link-wrapper select" data-type="US10YY">
+                    <p>미국 10년</p>
+                    <span class="one"></span>
+                    <span class="two"></span>
+                    <span class="three"></span>
+                    <span class="four"></span>
+                </div>
+                <div id="GM10YY" class="link-wrapper select" data-type="GM10YY">
+                    <p>독일 10년</p>
+                    <span class="one"></span>
+                    <span class="two"></span>
+                    <span class="three"></span>
+                    <span class="four"></span>
+                </div>
+                <div id="UK10YY" class="link-wrapper select" data-type="UK10YY">
+                    <p>영국 10년</p>
+                    <span class="one"></span>
+                    <span class="two"></span>
+                    <span class="three"></span>
+                    <span class="four"></span>
+                </div>
+                <div id="JP10YY" class="link-wrapper select" data-type="JP10YY">
+                    <p>일본 10년</p>
+                    <span class="one"></span>
+                    <span class="two"></span>
+                    <span class="three"></span>
+                    <span class="four"></span>
+                </div>
+            </div>
+            <div class="chart-wrap">
+                <div class="chart-area" id="chartArea1"></div>
+            </div>
+        </div>
+        <script>
+            let items = {
+                "KR1Y": KR1Y,
+                "KR3Y": KR3Y,
+                "KR5Y": KR5Y,
+                "KR10Y": KR10Y,
+                "US10YY": US10YY,
+                "GM10YY": GM10YY,
+                "UK10YY": UK10YY,
+                "JP10YY": JP10YY
+            };
+        
+            $("#chart .item .select").on("click", function (e) {
+                e.preventDefault();
+                handleSelectClick.call(this, "bonds", 1200, 450);
+            });
+        
+            $("#chart .item").each(function () {
+                setDefault.call(this)
+            });
+        </script>
+    </div>
+</div>
+<div class="page">
+    <div class="descript">
+        <h2>오늘 채권 시세</h2>
+        <div id="timeSelect" class="tab">
+            <div id="daily" class="link-wrapper select on" data-time="daily">
+                <p>일일</p>
+                <span class="one"></span>
+                <span class="two"></span>
+                <span class="three"></span>
+                <span class="four"></span>
+            </div>
+            <div id="period" class="link-wrapper select" data-time="period">
+                <p>기간</p>
+                <span class="one"></span>
+                <span class="two"></span>
+                <span class="three"></span>
+                <span class="four"></span>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="listUp">
+        <div id="mainSelect" class="tab">
+            <div id="all" class="link-wrapper select on" data-main="korea">
+                <p>국내</p>
+                <span class="one"></span>
+                <span class="two"></span>
+                <span class="three"></span>
+                <span class="four"></span>
+            </div>
+            <div id="asia" class="link-wrapper select" data-main="foreign">
+                <p>해외</p>
+                <span class="one"></span>
+                <span class="two"></span>
+                <span class="three"></span>
+                <span class="four"></span>
+            </div>
+        </div>
+        
+        <div class="container">
+            {% autoescape off %}
+            {{ list_div }}
+            {% endautoescape %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

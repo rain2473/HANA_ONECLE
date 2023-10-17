@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hanaonecle.portfolio.model.dao.PortfolioMapper">
+    <select id="getDepositData" parameterType="string" resultType="com.hanaonecle.portfolio.model.dto.DepositInfo">
+        select acc_id, one_id, DEPOSIT_RECEIVED, WITHDRAWAL_AVAILABLE, WITHDRAW_AMOUNT from account where one_id = #{id}
+    </select>
+
+    <select id="getDepositHistory" parameterType="string" resultType="com.hanaonecle.portfolio.model.dto.DepositHistory">
+        select dep_dt, amount, inout, total_deposit from deposit where acc_id = (select acc_id from account where one_id = #{id}) order by dep_id asc
+    </select>
+
+    <select id="getOrderHistory" parameterType="string" resultType="com.hanaonecle.portfolio.model.dto.OrderHistory">
+        select work_dt, name, order_price, order_volume, order_type, order_result from
+            (select work_dt, isin, order_price, order_volume, order_type, order_result from order_request
+            where acc_id = (select acc_id from account where one_id = #{id}) order by ODR_ID) a,
+            (select isin, name from stock) b
+        where a.isin =b.isin
+    </select>
+
+    <select id="getBenefitData" parameterType="string" resultType="com.hanaonecle.portfolio.model.dto.Benefit">
+        select work_dt as time, round((value_amount + profit - buy_amount) * 100 / buy_amount,2) as value from portfolio where acc_id = (select acc_id from account where one_id = #{id})
+    </select>
+
+    <select id="getCashData" parameterType="string" resultType="long">
+        select DEPOSIT_RECEIVED  as price from account where one_id = #{id}
+    </select>
+
+    <select id="getRebalancedData" parameterType="string" resultType="com.hanaonecle.portfolio.model.dto.Rebalanced">
+        SELECT b.name, diff, new_value,
+        round(new_value / SUM(new_value) OVER () * 90,1) AS new_portion
+        from (
+            select isin, diff,
+            case
+                when 1 >= rownum or diff >= (select goal from invest_info where one_id = #{id})
+                then round(bal_volume / 2)
+            else bal_volume
+            end as new_volume,
+            case
+                when 1 >= rownum or diff >= (select goal from invest_info where one_id = #{id})
+                then round(value / 2)
+            else value
+            end as new_value
+            from
+                (select a.isin, round((a.bal_volume * b.close - a.bal_price) / a.bal_price * 100 ,2) as diff, a.bal_volume, a.bal_volume * b.close as value from
+                    (select * from balance where acc_id = (select acc_id from account where one_id = #{id})) a,
+                    (select * from ohlcv where work_dt = (select max(work_dt) from work_date)) b
+                where a.isin = b.isin
+                order by diff)
+        ) a,
+        (select isin, name from stock) b
+        where a.isin = b.isin
+        order by new_portion desc
+    </select>
+
+    <select id="getSellData" parameterType="string" resultType="com.hanaonecle.portfolio.model.dto.OrderStocks">
+        select s.name, r.* from
+            (select c.isin, c.sell_amount as volume, (c.sell_amount * c.close) as amount from
+                (select a.isin, round((a.bal_volume * b.close - a.bal_price) / a.bal_price * 100 ,2) as diff, round(a.bal_volume/2) as sell_amount, b.close as close from
+                    (select * from balance where acc_id = (select acc_id from account where one_id = #{id})) a,
+                    (select * from ohlcv where work_dt = (select max(work_dt) from work_date)) b
+                where a.isin = b.isin) c,
+                (select goal from invest_info where one_id = #{id}) d
+            where c.diff > d.goal
+
+            union
+
+            select isin, sell_amount, (sell_amount * close) as amount from
+                (select a.isin, round((a.bal_volume * b.close - a.bal_price) / a.bal_price * 100 ,2) as diff, round(bal_volume / 2) as sell_amount, close from
+                    (select * from balance where acc_id = (select acc_id from account where one_id = #{id})) a,
+                    (select * from ohlcv where work_dt = (select max(work_dt) from work_date)) b
+                where a.isin = b.isin
+                order by diff asc)
+            where 1 >= rownum) r,
+        (select isin, name from stock)s
+    where s.isin = r.isin
+    </select>
+
+    <select id="getBuyData" parameterType="string" resultType="com.hanaonecle.portfolio.model.dto.OrderStocks">
+        select s.name, r.* from
+            (select a.isin, round(b.percent_10 / a.close) as volume, b.percent_10 as amount from
+                (select * from
+                    (select a.isin, round((a.close - b.close) / b.close * 100,2) as diff, a.close from
+                            onecle_recommend a,
+                            (select isin, work_dt, close from ohlcv where work_dt = (SELECT join_date FROM account where one_id = #{id})) b
+                            where a.isin = b.isin
+                        order by diff desc
+                    )
+                where 1 >= rownum) a,
+                (select round(sum(price)/10) as percent_10
+                from
+                    (select d.name, c.price from
+                        (select a.isin, a.BAL_VOLUME * b.CLOSE as price from
+                            (select isin, BAL_VOLUME from balance where acc_id = (select acc_id from account where one_id = #{id})) a,
+                            (select isin, CLOSE from ohlcv where work_dt = (select max(work_dt) from work_date)) b
+                            where a.isin = b.isin) c,
+                        (select isin, name from stock) d
+                    where c.isin = d.isin
+                    union select '현금' as name, (select DEPOSIT_RECEIVED from account where one_id = #{id}) as price from dual)
+                order by price desc) b) r,
+            (select isin, name from stock)s
+        where s.isin = r.isin
+    </select>
+
+    <select id="getBenchmarkData" parameterType="string" resultType="com.hanaonecle.portfolio.model.dto.Benefit">
+        select work_dt as time, round((value - first_value) * 100 / first_value + (rate_value / 356) * (rownum - 1), 2) as value from
+            (select work_dt, sum(value) as value,
+                (select value from
+                    (select work_dt, sum(value) as value from daily_index where idx_code != 3 and work_dt >= (select join_date from account where one_id = #{id}) group by work_dt order by work_dt)
+                where rownum = 1) as first_value,
+                (select value from
+                    (select work_dt, sum(value) as value from daily_index where idx_code = 3 and work_dt >= (select join_date from account where one_id = #{id}) group by work_dt order by work_dt)
+                where rownum = 1) as rate_value
+        from daily_index where idx_code != 3 and work_dt >= (select join_date from account where one_id = #{id}) group by work_dt order by work_dt)
+    </select>
+
+    <select id="getPortfolioScore" parameterType="string" resultType="com.hanaonecle.portfolio.model.dto.Eveluation">
+        select
+        ROUND(AVG(benchmark),2) as BENCHMARK_AVG,
+        ROUND(AVG(benefit - benchmark) / STDDEV(benefit - benchmark),2) AS SHARP,
+        ROUND(COVAR_POP(benefit, benchmark) / VARIANCE(benchmark),2) AS BETA,
+        ROUND(AVG(benefit - benchmark) / (COVAR_POP(benefit, benchmark) / VARIANCE(benchmark)), 2) AS TREYNOR
+        from
+            (select b.work_dt, a.diff as benefit, b.diff as benchmark from
+                (select work_dt, round((value_amount + profit - buy_amount)/ buy_amount * 100 ,2) as diff from portfolio where acc_id = (select acc_id from account where one_id = #{id})) a,
+            (select work_dt, round((value - first_value) * 100 / first_value + (rate_value / 356) * (rownum - 1), 2) as diff  from
+                (select work_dt, sum(value) as value,
+                    (select value from
+                        (select work_dt, sum(value) as value from daily_index where idx_code != 3 and work_dt >= (select join_date from account where one_id = #{id}) group by work_dt order by work_dt)
+                    where rownum = 1) as first_value,
+                (select value from
+                        (select work_dt, sum(value) as value from daily_index where idx_code = 3 and work_dt >= (select join_date from account where one_id = #{id}) group by work_dt order by work_dt)
+                    where rownum = 1) as rate_value
+            from daily_index where idx_code != 3 and work_dt >= (select join_date from account where one_id = #{id}) group by work_dt))b
+            where a.work_dt = b.work_dt)
+        order by work_dt
+    </select>
+
+    <select id="getGoalData" parameterType="string" resultType="string">
+        select goal from invest_info where one_id = #{id}
+    </select>
+
+    <select id="getMyStocks" parameterType="string" resultType="com.hanaonecle.portfolio.model.dto.MyStocks">
+        select isin, name from stock where isin in (select isin from balance where acc_id = (select acc_id from account where one_id = #{id}))
+    </select>
+
+    <select id="getMyStocksAndValue" parameterType="string" resultType="com.hanaonecle.portfolio.model.dto.MyStockValues">
+        select * from
+            (select c.isin, d.name, c.volume, c.price from
+                (select a.isin, a.BAL_VOLUME as volume, a.BAL_VOLUME * b.CLOSE as price from
+                    (select isin, BAL_VOLUME from balance where acc_id = (select acc_id from account where one_id = #{id})) a,
+                    (select isin, CLOSE from ohlcv where work_dt = (select max(work_dt) from work_date)) b
+                where a.isin = b.isin) c,
+                (select isin, name from stock) d
+            where c.isin = d.isin
+            union select '000000' as isin, '현금' as name, 0 as volume, (select DEPOSIT_RECEIVED from account where one_id = #{id}) as price from dual)
+        order by price desc
+    </select>
+
+    <select id="getMyAccountData" parameterType="string" resultType="com.hanaonecle.portfolio.model.dto.MyAccount">
+        select b.acc_id as account, a.profit as profit, a.value_amount as valuation, a.buy_amount as buy, b.deposit_received as received, b.withdrawal_available as withdrawal_available, b.withdraw_amount as withdraw_amount from
+            (select acc_id, work_dt, profit, value_amount, buy_amount from portfolio) a,
+            (select acc_id, deposit_received, withdrawal_available, withdraw_amount from account where one_id = #{id})b
+        where a.acc_id = b.acc_id and work_dt = (select max(work_dt) from work_date)
+    </select>
+
+    <insert id="insertNewDepositHistory" parameterType="com.hanaonecle.portfolio.model.dto.DepositInput">
+        insert into deposit (DEP_ID, ACC_ID, AMOUNT, INOUT, TOTAL_DEPOSIT) values ((select Max(DEP_ID) from deposit) + 1, (select acc_id from account where one_id = #{one_id}), #{amount}, #{inout}, (select DEPOSIT_RECEIVED from account where one_id = #{one_id}) + #{amount} * (#{inout} * -2 + 1))
+    </insert>
+
+    <update id="updateDepositIncome" parameterType="com.hanaonecle.portfolio.model.dto.DepositInput">
+        update account set DEPOSIT_RECEIVED = DEPOSIT_RECEIVED + #{amount}, WITHDRAWAL_AVAILABLE = WITHDRAWAL_AVAILABLE + #{amount} where ACC_ID = (select acc_id from account where one_id = #{one_id})
+    </update>
+
+    <update id="updateDepositOutcome" parameterType="com.hanaonecle.portfolio.model.dto.DepositInput">
+        update account set DEPOSIT_RECEIVED = DEPOSIT_RECEIVED - #{amount}, WITHDRAWAL_AVAILABLE = WITHDRAWAL_AVAILABLE - #{amount}, WITHDRAW_AMOUNT = WITHDRAW_AMOUNT + #{amount} where ACC_ID = (select acc_id from account where one_id = #{one_id})
+    </update>
+
+    <update id="updatePortfolioP" parameterType="com.hanaonecle.portfolio.model.dto.PortfolioInputP">
+        MERGE INTO portfolio
+            USING(
+                select #{work_dt} as work_dt, (select acc_id from account where one_id = #{one_id}) as acc_id, #{buy_amount} as buy_amount, #{value_amount} as value_amount, #{profit} as profit from dual) a
+            ON (portfolio.acc_id = a.acc_id and portfolio.work_dt = a.work_dt)
+            WHEN MATCHED THEN
+                UPDATE SET
+                    portfolio.buy_amount = portfolio.buy_amount + a.buy_amount,
+                    portfolio.profit = portfolio.profit + a.profit,
+                    portfolio.value_amount = a.value_amount
+            WHEN NOT MATCHED THEN
+                INSERT (work_dt, acc_id, buy_amount, profit, value_amount) VALUES (a.work_dt, a.acc_id, a.buy_amount, a.profit, a.value_amount)
+    </update>
+
+    <insert id="insertNewOrderHistoryP" parameterType="java.util.List">
+        insert into ORDER_REQUEST (ODR_ID, ACC_ID, ISIN, WORK_DT, ORDER_PRICE, ORDER_VOLUME, ORDER_TYPE, ORDER_RESULT) values ((select nvl(max(ODR_ID) + 1, 0) as odr_id from order_request), (select acc_id from account where one_id = #{oneId}), #{isin}, #{workDt}, #{orderPrice}, #{orderVolume}, #{orderType}, 1)
+    </insert>
+
+    <insert id="insertNewConclusionHistoryP" parameterType="java.util.List">
+        insert into CONCLUSION (CON_ID, ACC_ID, ISIN, WORK_DT, CON_PRICE, CON_VOLUME, CON_TYPE, CON_RESULT) values ((select nvl(max(CON_ID) + 1, 0) as CON_ID from CONCLUSION), (select acc_id from account where one_id = #{oneId}), #{isin}, #{workDt}, #{orderPrice}, #{orderVolume}, #{orderType}, 1)
+    </insert>
+
+    <update id="updateBalanceSellP" parameterType="java.util.List">
+        MERGE INTO BALANCE
+            USING(
+                select #{isin} as isin, (select acc_id from account where one_id = #{oneId}) as acc_id, #{orderTotal} as bal_price, #{orderVolume} as bal_volume from dual) a
+            ON (BALANCE.acc_id = a.acc_id and BALANCE.isin = a.isin)
+            WHEN MATCHED THEN
+                UPDATE SET
+                    BALANCE.bal_price = BALANCE.bal_price - a.bal_price,
+                    BALANCE.bal_volume = BALANCE.bal_volume - a.bal_volume
+        DELETE WHERE bal_volume = 0
+    </update>
+
+    <update id="updateAccountSellP" parameterType="java.util.List">
+        update ACCOUNT set DEPOSIT_RECEIVED = DEPOSIT_RECEIVED + #{orderTotal} where one_id = #{oneId}
+    </update>
+
+    <update id="updateBalanceBuyP" parameterType="java.util.List">
+        MERGE INTO BALANCE
+            USING(
+                select #{isin} as isin, (select acc_id from account where one_id = #{oneId}) as acc_id, #{orderTotal} as bal_price, #{orderVolume} as bal_volume from dual) a
+            ON (BALANCE.acc_id = a.acc_id and BALANCE.isin = a.isin)
+            WHEN MATCHED THEN
+                UPDATE SET
+                    BALANCE.bal_price = BALANCE.bal_price + a.bal_price,
+                    BALANCE.bal_volume = BALANCE.bal_volume + a.bal_volume
+            WHEN NOT MATCHED THEN
+                INSERT (isin, acc_id, bal_price, bal_volume) VALUES (a.isin, a.acc_id, a.bal_price, a.bal_volume)
+    </update>
+
+    <update id="updateAccountBuyP" parameterType="java.util.List">
+        update ACCOUNT set DEPOSIT_RECEIVED = DEPOSIT_RECEIVED - #{orderTotal}, WITHDRAWAL_AVAILABLE = case
+                                                                                                           when DEPOSIT_RECEIVED - #{orderTotal} > WITHDRAWAL_AVAILABLE then WITHDRAWAL_AVAILABLE
+                                                                                                           else DEPOSIT_RECEIVED - #{orderTotal}
+            end
+        where one_id = #{oneId}
+    </update>
+</mapper>

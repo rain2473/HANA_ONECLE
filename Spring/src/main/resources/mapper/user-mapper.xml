@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hanaonecle.user.model.dao.UserMapper">
+    <!-- 회원 등록 -->
+    <insert id="insertUser" parameterType="com.hanaonecle.user.model.dto.User">
+        INSERT INTO one_members (one_id, password, name, phone, email, state)
+        VALUES (#{one_id}, #{password}, #{name}, #{phone}, #{email}, 1)
+    </insert>
+    <delete id="deleteUser" parameterType="string">
+        update one_members set state=4 where one_id=#{one_id}
+    </delete>
+    <update id="updateUser" parameterType="com.hanaonecle.user.model.dto.User">
+        update one_members set
+                        name=#{name},
+                        phone=#{phone},
+                        email=#{email}
+        where one_id = #{one_id}
+    </update>
+    <!-- 로그인 -->
+    <select id="loginUser" parameterType="HashMap" resultType="com.hanaonecle.user.model.dto.User">
+        SELECT
+        *
+        FROM one_members
+        where ONE_id = #{id}
+        and password = #{password}
+    </select>
+    <select id="getUserInfo" parameterType="string" resultType="com.hanaonecle.user.model.dto.UserInfo">
+        SELECT a.*, b.*, c.* FROM
+         (SELECT one_id, name, phone, email FROM one_Members where one_id = #{id}) a,
+         (SELECT acc_ID as account, join_Date FROM account where one_id = #{id}) b,
+         (SELECT period, rebalance, goal, inv_type FROM invest_info where one_id = #{id}) c
+    </select>
+    <select id="selectOneUser" parameterType="string" resultType="com.hanaonecle.user.model.dto.User">
+        SELECT
+            *
+        FROM one_members
+        where ONE_id = #{id}
+    </select>
+
+    <select id="getUserName" parameterType="string" resultType="string">
+        select name from one_members where ONE_id = #{id}
+    </select>
+</mapper>

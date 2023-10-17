@@ -1,0 +1,45 @@
+{% extends 'dataCenter/base/base.html' %}
+{% load static %}
+{% block content %}
+<div class="descript">
+    <h2>실시간 마켓맵</h2>
+    <div class="tab">
+        <div id = "kospi" class="link-wrapper select {% if type == 'kospi' %}on{% endif %}" data-href="{% url 'dataCenter:KoreaMarketMap' type='kospi' %}">
+            <p>KOSPI</p>
+            <span class="one"></span>
+            <span class="two"></span>
+            <span class="three"></span>
+            <span class="four"></span>
+        </div>
+        <div id = "kosdaq" class="link-wrapper select {% if type == 'kosdaq' %}on{% endif %}" data-href="{% url 'dataCenter:KoreaMarketMap' type='kosdaq' %}">
+            <p>KOSDAQ</p>
+            <span class="one"></span>
+            <span class="two"></span>
+            <span class="three"></span>
+            <span class="four"></span>
+        </div>
+        <div class="link-wrapper select" data-href="{% url 'dataCenter:KoreaMarketMap' type=type %}">
+            <p>새로고침</p>
+            <span class="one"></span>
+            <span class="two"></span>
+            <span class="three"></span>
+            <span class="four"></span>
+        </div>
+    </div>
+</div>
+<hr>
+<div id = "MarketMap">
+    <div class="container">
+        <p>{{ created_time }} ({{ status }})</p>
+    </div>
+    {% autoescape off %}
+    {{ fig_div }}
+    {% endautoescape %}
+    <div class="container">
+        <p>박스 크기는 시가총액이며, %는 변동률입니다.</p>
+        <div class="img_wrapper">
+            <img src="https://postfiles.pstatic.net/MjAyMjEwMTdfMTA5/MDAxNjY1OTkyMzk4NzQ3.C3OGTkrIwUZJ0-AkCmIParlPuvBc3sWToTPVZW9Inysg.tWV6v1WpDDBtQ7gBdrg5GVYMRG8SDYx_kklHQvthXokg.PNG.rain2473/%EC%83%89%EC%83%81.png?type=w773" alt="색상표">
+        </div>
+    </div>
+</div>
+{% endblock content %}

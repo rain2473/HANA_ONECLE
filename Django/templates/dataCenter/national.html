@@ -1,0 +1,65 @@
+{% extends 'dataCenter/base/list.html' %}
+{% load static %}
+{% block content %}
+<script>
+    const KOSPI = preprocessingJson('{{ KOSPI | escapejs }}');
+    const KOSDAQ = preprocessingJson('{{ KOSDAQ | escapejs }}');
+</script>
+<div class="page">
+    <div class="descript">
+        <h2>국내 증시 변화</h2>
+    </div>
+    <hr>
+    <div id="chart">
+        <div id = "nation" class="item big">
+            <div class="tab">
+                <div id="KOSPI" class="link-wrapper select" data-type="KOSPI">
+                    <p>KOSPI</p>
+                    <span class="one"></span>
+                    <span class="two"></span>
+                    <span class="three"></span>
+                    <span class="four"></span>
+                </div>
+                <div id="KOSDAQ" class="link-wrapper select" data-type="KOSDAQ">
+                    <p>KOSDAQ</p>
+                    <span class="one"></span>
+                    <span class="two"></span>
+                    <span class="three"></span>
+                    <span class="four"></span>
+                </div>
+            </div>
+            <div class="chart-wrap">
+                <div class="chart-area" id="chartArea1"></div>
+            </div>
+        </div>
+        <script>
+            let items = {
+                "KOSPI": KOSPI,
+                "KOSDAQ": KOSDAQ,
+            };
+
+            $("#chart .item .select").on("click", function (e) {
+                e.preventDefault();
+                handleSelectClick.call(this, "national", 1000, 450);
+            });
+
+            $("#chart .item").each(function () {
+                setDefault.call(this)
+            });
+        </script>
+    </div>
+</div>
+<div class="page">
+    <div class="descript">
+        <h2>국내 경제 지표</h2>
+    </div>
+    <hr>
+    <div id = "nationalList" class="listUp">
+        <div class="container">
+            {% autoescape off %}
+            {{ list_div }}
+            {% endautoescape %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

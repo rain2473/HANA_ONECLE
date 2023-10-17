@@ -1,0 +1,33 @@
+version: '3'
+
+volumes:
+  mysql_data: {}
+
+services:
+  db:
+    image: mysql
+    container_name: mysql
+    volumes:
+      - mysql_data:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=mysql
+      - MYSQL_USER=hyk
+      - MYSQL_PASSWORD=2473
+      - MYSQL_ROOT_PASSWORD=2473
+
+  django:
+    build:
+      context: .
+      dockerfile: ./compose/Dockerfile
+    container_name: django
+    volumes:
+      - ./:/app/
+    command: ["./manage.py", "runserver", "0:8000"]
+    environment:
+      - DJANGO_DB_HOST=db
+      - DJANGO_DB_PORT=3306
+    depends_on:
+      - db
+    restart: always
+    ports:
+      - 8000:8000

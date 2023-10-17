@@ -1,0 +1,34 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<form>
+    <div class="form-contents">
+        <label for="orderPrice">매수주문 가격:</label>
+        <input type="text" id="orderPrice" name="orderPrice"
+            placeholder="1000 KRW"><br>
+    </div>
+    <div class="form-contents">
+        <label for="orderQuantity">매수주문 수량:</label>
+        <input type="text" id="orderQuantity" name="orderQuantity"
+            placeholder="0"><br>
+    </div>
+    <div class="form-contents">
+        <label for="availableFunds">주문가능 금액:</label>
+        <input type="text" id="availableFunds" name="availableFunds" value="0 KRW"
+            readonly><br>
+    </div>
+    <div class="form-contents">
+        <label for="quantityPercent">주문 비율:</label><br />
+        <button type="button" class="orderButton" id="percent10">10%</button>
+        <button type="button" class="orderButton" id="percent25">25%</button>
+        <button type="button" class="orderButton" id="percent50">50%</button>
+        <button type="button" class="orderButton" id="percent100">100%</button>
+    </div>
+    <div class="form-contents">
+        <label for="totalOrder">매수주문 총액:</label><br>
+        <input type="text" id="totalOrder" name="totalOrder" readonly><br>
+    </div>
+    <div class="buttonSet">
+        <div id = "requestOrder" class="link-wrapper select doOnecle" onclick="requestOrder(currentIsin, amount, maximum)">
+            <h2>주문하기</h2>
+        </div>
+    </div>
+</form>

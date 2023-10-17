@@ -1,0 +1,165 @@
+{   
+    "account" : "123-456-87-967",
+    "list" : [
+        {
+            "s_date": "2023/01/01",
+            "stock": "하나금융지주",
+            "o_price": "40000",
+            "o_volume": "30",
+            "o_type": "매수",
+            "o_result": "체결"
+        },
+        {
+            "s_date": "2023/01/11",
+            "stock": "하나금융지주",
+            "o_price": "45000",
+            "o_volume": "10",
+            "o_type": "매도",
+            "o_result": "미체결"
+        },
+        {
+            "s_date": "2023/01/11",
+            "stock": "하나금융지주",
+            "o_price": "44000",
+            "o_volume": "10",
+            "o_type": "매도",
+            "o_result": "체결"
+        },
+        {
+            "s_date": "2023/02/01",
+            "stock": "삼성전자",
+            "o_price": "80000",
+            "o_volume": "10",
+            "o_type": "매수",
+            "o_result": "미체결"
+        },
+        {
+            "s_date": "2023/02/01",
+            "stock": "삼성전자",
+            "o_price": "83000",
+            "o_volume": "10",
+            "o_type": "매수",
+            "o_result": "체결"
+        },
+        {
+            "s_date": "2023/01/01",
+            "stock": "하나금융지주",
+            "o_price": "40000",
+            "o_volume": "30",
+            "o_type": "매수",
+            "o_result": "체결"
+        },
+        {
+            "s_date": "2023/01/01",
+            "stock": "하나금융지주",
+            "o_price": "40000",
+            "o_volume": "30",
+            "o_type": "매수",
+            "o_result": "체결"
+        },
+        {
+            "s_date": "2023/01/01",
+            "stock": "하나금융지주",
+            "o_price": "40000",
+            "o_volume": "30",
+            "o_type": "매수",
+            "o_result": "체결"
+        },
+        {
+            "s_date": "2023/01/01",
+            "stock": "하나금융지주",
+            "o_price": "40000",
+            "o_volume": "30",
+            "o_type": "매수",
+            "o_result": "체결"
+        },
+        {
+            "s_date": "2023/01/01",
+            "stock": "하나금융지주",
+            "o_price": "40000",
+            "o_volume": "30",
+            "o_type": "매수",
+            "o_result": "체결"
+        },
+        {
+            "s_date": "2023/01/01",
+            "stock": "하나금융지주",
+            "o_price": "40000",
+            "o_volume": "30",
+            "o_type": "매수",
+            "o_result": "체결"
+        },
+        {
+            "s_date": "2023/01/01",
+            "stock": "하나금융지주",
+            "o_price": "40000",
+            "o_volume": "30",
+            "o_type": "매수",
+            "o_result": "체결"
+        },
+        {
+            "s_date": "2023/01/01",
+            "stock": "하나금융지주",
+            "o_price": "40000",
+            "o_volume": "30",
+            "o_type": "매수",
+            "o_result": "체결"
+        },
+        {
+            "s_date": "2023/01/01",
+            "stock": "하나금융지주",
+            "o_price": "40000",
+            "o_volume": "30",
+            "o_type": "매수",
+            "o_result": "체결"
+        },
+        {
+            "s_date": "2023/01/01",
+            "stock": "하나금융지주",
+            "o_price": "40000",
+            "o_volume": "30",
+            "o_type": "매수",
+            "o_result": "체결"
+        },
+        {
+            "s_date": "2023/01/01",
+            "stock": "하나금융지주",
+            "o_price": "40000",
+            "o_volume": "30",
+            "o_type": "매수",
+            "o_result": "체결"
+        },
+        {
+            "s_date": "2023/01/01",
+            "stock": "하나금융지주",
+            "o_price": "40000",
+            "o_volume": "30",
+            "o_type": "매수",
+            "o_result": "체결"
+        },
+        {
+            "s_date": "2023/01/01",
+            "stock": "하나금융지주",
+            "o_price": "40000",
+            "o_volume": "30",
+            "o_type": "매수",
+            "o_result": "체결"
+        },
+        {
+            "s_date": "2023/01/01",
+            "stock": "하나금융지주",
+            "o_price": "40000",
+            "o_volume": "30",
+            "o_type": "매수",
+            "o_result": "체결"
+        },
+        {
+            "s_date": "2023/01/01",
+            "stock": "하나금융지주",
+            "o_price": "40000",
+            "o_volume": "30",
+            "o_type": "매수",
+            "o_result": "체결"
+        }
+    ]
+}

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hanaonecle.member.model.dao.MemberMapper">
+    <!-- 회원 전체 조회 -->
+    <select id="getAllMember" parameterType="com.hanaonecle.member.model.dto.Member"
+            resultType="com.hanaonecle.member.model.dto.Member">
+        SELECT *
+        FROM member
+    </select>
+    <!-- 회원 등록 -->
+
+    <insert id="insertInvestInfo" parameterType="com.hanaonecle.member.model.dto.Member">
+        INSERT INTO invest_info (id, goal)
+        VALUES (#{id}, #{goal})
+    </insert>
+    <!-- 회원 아이디 조회 -->
+    <select id="selectOneMember" parameterType="String" resultType="int">
+        SELECT count(*)
+        FROM member
+        where id = #{id}
+    </select>
+    <!-- 로그인 -->
+
+    <select id="selectNameAndEmailOfMember" parameterType="HashMap" resultType="com.hanaonecle.member.model.dto.Member">
+        SELECT *
+        FROM member
+        where email = #{email}
+          and name = #{name}
+    </select>
+    <select id="selectNameOfMember" parameterType="String" resultType="com.hanaonecle.member.model.dto.Member">
+        SELECT
+        id as id,
+        pw as password,
+        name as name,
+        email as email,
+        phone as phoneNumber,
+        provider as provider
+        FROM member
+        where id = #{id}
+    </select>
+
+    <select id="selectInvestInfo" parameterType="String" resultType="com.hanaonecle.member.model.dto.InvestInfo">
+        select * from invest_info where id = #{id}
+    </select>
+
+    <update id="updateInvest" parameterType="com.hanaonecle.member.model.dto.InvestInfo">
+        update invest_info set
+        goal = #{goal}
+        where id = #{id}
+    </update>
+    <select id="findInvestInfoById" parameterType="java.lang.String" resultType="com.hanaonecle.member.model.dto.InvestInfo">
+        SELECT *
+        FROM INVEST_INFO
+        WHERE ID = #{id}
+    </select>
+</mapper>

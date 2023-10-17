@@ -1,0 +1,10 @@
+Flask
+Flask-RESTX
+pandas
+pykrx
+scikit-learn
+oracledb
+django-environ
+django-cors-headers
+transformers
+torch

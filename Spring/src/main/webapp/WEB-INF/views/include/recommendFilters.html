@@ -1,0 +1,116 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<div class="container">
+    <div class="descript">
+        <h2>종목 필터조건 선택</h2>
+    </div>
+    <hr>
+    <div class="recommendFilteringWrapper">
+        <div class="recommendFilteringContainer">
+            <div class="sliderContainer">
+                <div class="FilteringNameWrapper">
+                    <p class="FilteringName">
+                        <i class="fa fa-info-circle" aria-hidden="true" data-tooltip="거래량은 시세에 영향을 주는 주요 지표입니다"></i>
+                        거래량 : 
+                    </p>
+                </div>
+                <div class="rangeDisplayWrapper">
+                    <p class="rangeDisplay">상위 100% 이상</p>
+                </div>
+                <form id = "VOLUME" class="box">
+                    <div class="slider">
+                        <input type="range" class="input-left" min="0" max="100" step="10" value="0" />
+                        <div class="track">
+                            <div class="range"></div>
+                            <div class="thumb left"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="sliderContainer">
+                <div class="FilteringNameWrapper">
+                    <p class="FilteringName">
+                        <i class="fa fa-info-circle" aria-hidden="true" data-tooltip="전일 등락률은 시세 추이를 예측할 수 있는 주요 지표입니다"></i>
+                        전일 등락률 : 
+                    </p>
+                </div>
+                <div class="rangeDisplayWrapper">
+                    <p class="rangeDisplay">상위 100% 이상</p>
+                </div>
+                <form id = "UPDOWN" class="box">
+                    <div class="slider">
+                        <input type="range" class="input-left" min="0" max="100" step="10" value="0" />
+                        <div class="track">
+                            <div class="range"></div>
+                            <div class="thumb left"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="sliderContainer">
+                <div class="FilteringNameWrapper">
+                    <p class="FilteringName">
+                        <i class="fa fa-info-circle" aria-hidden="true" data-tooltip="EPS는 기업평가에 주요하게 사용되는 지표입니다"></i>
+                        EPS : 
+                    </p>
+                </div>
+                <div class="rangeDisplayWrapper">
+                    <p class="rangeDisplay">상위 100% 이상</p>
+                </div>
+                <form id = "EPS" class="box">
+                    <div class="slider">
+                        <input type="range" class="input-left" min="0" max="100" step="10" value="0" />
+                        <div class="track">
+                            <div class="range"></div>
+                            <div class="thumb left"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="sliderContainer">
+                <div class="FilteringNameWrapper">
+                    <p class="FilteringName">
+                        <i class="fa fa-info-circle" aria-hidden="true" data-tooltip="PBR은 기업평가에 주요하게 사용되는 지표입니다"></i>
+                        PBR : 
+                    </p>
+                </div>
+                <div class="rangeDisplayWrapper">
+                    <p class="rangeDisplay">상위 100% 이상</p>
+                </div>
+                <form id = "PBR" class="box">
+                    <div class="slider">
+                        <input type="range" class="input-left" min="0" max="100" step="10" value="0" />
+                        <div class="track">
+                            <div class="range"></div>
+                            <div class="thumb left"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="sliderContainer">
+                <div class="FilteringNameWrapper">
+                    <p class="FilteringName">
+                        <i class="fa fa-info-circle" aria-hidden="true" data-tooltip="PER은 기업평가에 주요하게 사용되는 지표입니다"></i>
+                        PER : 
+                    </p>
+                </div>
+                <div class="rangeDisplayWrapper">
+                    <p class="rangeDisplay">상위 100% 이상</p>
+                </div>
+                <form id = "PER" class="box">
+                    <div class="slider">
+                        <input type="range" class="input-left" min="0" max="100" step="10" value="0" />
+                        <div class="track">
+                            <div class="range"></div>
+                            <div class="thumb left"></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="buttonSet">
+        <div class="link-wrapper select getRecommend doOnecle">
+            <h2>원클 추천받기</h2>
+        </div>
+    </div>
+</div>

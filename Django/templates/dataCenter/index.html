@@ -1,0 +1,194 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>하나원클 데이터센터</title>
+    <link rel="shortcut icon" href="{% static 'img/logo2.png' %}" type="image/x-icon">
+    <link rel="stylesheet" href="{% static 'style/style.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'style/rollingbanner-js.css' %}" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <script src="{% static 'javascript/jsonHandler.js' %}"></script>
+    <script>
+        const rollingbanner = "{% static 'json/rollingbanner.json' %}";
+        const market = preprocessingJson('{{ market | escapejs }}');
+        const exchange = preprocessingJson('{{ exchange | escapejs }}');
+        const Rates_KR = preprocessingJson('{{ Rates_KR | escapejs }}');
+        const KOSPI = preprocessingJson('{{ KOSPI | escapejs }}');
+        const Exchange_US = preprocessingJson('{{ Exchange_US | escapejs }}');
+        const Rates_US = preprocessingJson('{{ Rates_US | escapejs }}');
+        const DOWJONES = preprocessingJson('{{ DOWJONES | escapejs }}');
+        const NASDAQ = preprocessingJson('{{ NASDAQ | escapejs }}');
+    </script>
+    <script src="{% static 'javascript/worldMapMaker.js' %}"></script>
+    <script src="{% static 'javascript/rollingbanner.js' %}"></script>
+    <script src="{% static 'javascript/chartMaker.js' %}"></script>
+    <script src="{% static 'javascript/base.js' %}"></script>
+    <script src="../../resources/javascript/subjectTypingEffect.js"></script>
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.anychart.com/geodata/latest/custom/world/world.js"></script>
+    <script src="https://code.jquery.com/jquery-1.12.0.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-base.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-ui.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-exports.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-map.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/v8/js/anychart-data-adapter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.15/proj4.js"></script>
+    <link href="https://cdn.anychart.com/playground-css/maps_choropleth/world_business_locator/style.css"
+        type="text/css" rel="stylesheet">
+    <link href="https://cdn.anychart.com/releases/v8/css/anychart-ui.min.css" type="text/css" rel="stylesheet">
+    <link href="https://cdn.anychart.com/releases/v8/fonts/css/anychart-font.min.css" type="text/css" rel="stylesheet">
+</head>
+
+<body>
+    <header>
+        {% include "dataCenter/include/header.html" %}
+    </header>
+    <main>
+        {% include "dataCenter/include/rollingbanner.html" %}
+        <div class="wrapper pagesIndex">
+            <div class="page">
+                <div id="worldMap">
+                    <h2>세계</h2>
+                    <div class="tab">
+                        <div id="market" class="link-wrapper select" data-type="market">
+                            <p>증시</p>
+                            <span class="one"></span>
+                            <span class="two"></span>
+                            <span class="three"></span>
+                            <span class="four"></span>
+                        </div>
+                        <div id="exchange" class="link-wrapper select" data-type="exchange">
+                            <p>환율</p>
+                            <span class="one"></span>
+                            <span class="two"></span>
+                            <span class="three"></span>
+                            <span class="four"></span>
+                        </div>
+                    </div>
+                    <div id="map-container"></div>
+                </div>
+            </div>
+            <div class="page">
+                <div id="preview">
+                    <div id="national" class="item">
+                        <h2>국내</h2>
+                        <div class="tab">
+                            <div id="Rates_KR" class="link-wrapper select" data-type="Rates_KR">
+                                <p>기준금리</p>
+                                <span class="one"></span>
+                                <span class="two"></span>
+                                <span class="three"></span>
+                                <span class="four"></span>
+                            </div>
+                            <div id="KOSPI" class="link-wrapper select" data-type="KOSPI">
+                                <p>KOSPI</p>
+                                <span class="one"></span>
+                                <span class="two"></span>
+                                <span class="three"></span>
+                                <span class="four"></span>
+                            </div>
+                            <div id="Exchange_US" class="link-wrapper select" data-type="Exchange_US">
+                                <p>US 1달러(원)</p>
+                                <span class="one"></span>
+                                <span class="two"></span>
+                                <span class="three"></span>
+                                <span class="four"></span>
+                            </div>
+                        </div>
+                        <div class="chart-wrap">
+                            <div class="chart-area" id="chartArea1"></div>
+                        </div>
+                    </div>
+                    <div id="international" class="item">
+                        <h2>해외(미국)</h2>
+                        <div class="tab">
+                            <div id="Rates_US" class="link-wrapper select" data-type="Rates_US">
+                                <p>미국 정책금리</p>
+                                <span class="one"></span>
+                                <span class="two"></span>
+                                <span class="three"></span>
+                                <span class="four"></span>
+                            </div>
+                            <div id="DOWJONES" class="link-wrapper select" data-type="DOWJONES">
+                                <p>DOWJONES</p>
+                                <span class="one"></span>
+                                <span class="two"></span>
+                                <span class="three"></span>
+                                <span class="four"></span>
+                            </div>
+                            <div id="NASDAQ" class="link-wrapper select" data-type="NASDAQ">
+                                <p>NASDAQ</p>
+                                <span class="one"></span>
+                                <span class="two"></span>
+                                <span class="three"></span>
+                                <span class="four"></span>
+                            </div>
+                        </div>
+                        <div class="chart-wrap">
+                            <div class="chart-area" id="chartArea2"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <span id="top_button">
+            <svg xmlns="http://www.w3.org/2000/svg" class="ionicon" viewBox="0 0 512 512">
+                <title>scrollTopFixed</title>
+                <path class="arrow-path" d="M268 112l144 144-144 144M392 256H100" />
+            </svg>
+        </span>
+        <ul class="pagination">
+        </ul>
+    </main>
+    <!-- <footer>
+        {% include "dataCenter/include/footer.html" %}
+    </footer> -->
+    <script type="text/javascript">
+        rollingBanner();
+        baseFunction();
+    </script>
+    <script>
+        var type = 'market';
+        document.getElementById('market').classList.add('on');
+        const marketElement = document.getElementById('market');
+        const exchangeElement = document.getElementById('exchange');
+        var data;
+        setTypeAndDrow();
+
+        clickHandler(marketElement, exchangeElement);
+        clickHandler(exchangeElement, marketElement);
+    </script>
+    <script>
+        let national = {
+            "Rates_KR": Rates_KR,
+            "KOSPI": KOSPI,
+            "Exchange_US": Exchange_US
+        };
+
+        let international = {
+            "Rates_US": Rates_US,
+            "DOWJONES": DOWJONES,
+            "NASDAQ": NASDAQ
+        };
+        $(document).ready(function () {
+            $("#preview .item .select").on("click", function (e) {
+                e.preventDefault();
+                handleSelectClick.call(this, "dual", 600, 350);
+            });
+
+            $("#preview .item").each(function () {
+                setDefault.call(this)
+            });
+        });
+        window.onload = () => {
+            const pages = document.querySelector('.pagesIndex');
+            const pagination = document.querySelector('.pagination');
+            onePageScroll(pages, pagination);
+        };
+    </script>
+</body>
+
+</html>

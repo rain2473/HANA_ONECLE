@@ -1,0 +1,179 @@
+{% extends 'dataCenter/base/list.html' %}
+{% load static %}
+{% block content %}
+<script>
+    const DOWJONES = preprocessingJson('{{ DOWJONES | escapejs }}');
+    const NASDAQ = preprocessingJson('{{ NASDAQ | escapejs }}');
+    const STOXX = preprocessingJson('{{ STOXX | escapejs }}');
+    const DAX = preprocessingJson('{{ DAX | escapejs }}');
+    const NIKKEI = preprocessingJson('{{ NIKKEI | escapejs }}');
+    const STI = preprocessingJson('{{ STI | escapejs }}');
+    const HANGSENG = preprocessingJson('{{ HANGSENG | escapejs }}');
+    const SHCOMP = preprocessingJson('{{ SHCOMP | escapejs }}');
+</script>
+<div class="page">
+    <div class="descript">
+        <h2>해외 증시 변화</h2>
+    </div>
+    <hr>
+    <div id="chart">
+        <div id = "foreign" class="item big">
+            <div class="tab">
+                <div id="DOWJONES" class="link-wrapper select" data-type="DOWJONES">
+                    <p>미국 DOWJONES</p>
+                    <span class="one"></span>
+                    <span class="two"></span>
+                    <span class="three"></span>
+                    <span class="four"></span>
+                </div>
+                <div id="NASDAQ" class="link-wrapper select" data-type="NASDAQ">
+                    <p>미국 NASDAQ</p>
+                    <span class="one"></span>
+                    <span class="two"></span>
+                    <span class="three"></span>
+                    <span class="four"></span>
+                </div>
+                <div id="STOXX" class="link-wrapper select" data-type="STOXX">
+                    <p>유럽 STOXX</p>
+                    <span class="one"></span>
+                    <span class="two"></span>
+                    <span class="three"></span>
+                    <span class="four"></span>
+                </div>
+                <div id="DAX" class="link-wrapper select" data-type="DAX">
+                    <p>독일 DAX</p>
+                    <span class="one"></span>
+                    <span class="two"></span>
+                    <span class="three"></span>
+                    <span class="four"></span>
+                </div>
+                <div id="NIKKEI" class="link-wrapper select" data-type="NIKKEI">
+                    <p>일본 NIKKEI</p>
+                    <span class="one"></span>
+                    <span class="two"></span>
+                    <span class="three"></span>
+                    <span class="four"></span>
+                </div>
+                <div id="STI" class="link-wrapper select" data-type="STI">
+                    <p>싱가포르 STI</p>
+                    <span class="one"></span>
+                    <span class="two"></span>
+                    <span class="three"></span>
+                    <span class="four"></span>
+                </div>
+                <div id="HANGSENG" class="link-wrapper select" data-type="HANGSENG">
+                    <p>홍콩 HANGSENG</p>
+                    <span class="one"></span>
+                    <span class="two"></span>
+                    <span class="three"></span>
+                    <span class="four"></span>
+                </div>
+                <div id="SHCOMP" class="link-wrapper select" data-type="SHCOMP">
+                    <p>중국 SHCOMP</p>
+                    <span class="one"></span>
+                    <span class="two"></span>
+                    <span class="three"></span>
+                    <span class="four"></span>
+                </div>
+            </div>
+            <div class="chart-wrap">
+                <div class="chart-area" id="chartArea1"></div>
+            </div>
+        </div>
+        <script>
+            let items = {
+                "DOWJONES": DOWJONES,
+                "NASDAQ": NASDAQ,
+                "STOXX": STOXX,
+                "DAX": DAX,
+                "NIKKEI": NIKKEI,
+                "STI": STI,
+                "HANGSENG": HANGSENG,
+                "SHCOMP": SHCOMP,
+            };
+
+            $("#chart .item .select").on("click", function (e) {
+                e.preventDefault();
+                handleSelectClick.call(this, "foreignal", 1000, 450);
+            });
+
+            $("#chart .item").each(function () {
+                setDefault.call(this)
+            });
+        </script>
+    </div>
+</div>
+<div class="page">
+    <div class="descript">
+        <h2>오늘 해외 증시 시세</h2>
+        <div id="timeSelect" class="tab">
+            <div id="daily" class="link-wrapper select on" data-time="daily">
+                <p>일일</p>
+                <span class="one"></span>
+                <span class="two"></span>
+                <span class="three"></span>
+                <span class="four"></span>
+            </div>
+            <div id="period" class="link-wrapper select" data-time="period">
+                <p>기간</p>
+                <span class="one"></span>
+                <span class="two"></span>
+                <span class="three"></span>
+                <span class="four"></span>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="listUp">
+        <div id="mainSelect" class="tab">
+            <div id="all" class="link-wrapper select on" data-main="all">
+                <p>전체</p>
+                <span class="one"></span>
+                <span class="two"></span>
+                <span class="three"></span>
+                <span class="four"></span>
+            </div>
+            <div id="asia" class="link-wrapper select" data-main="asia">
+                <p>아시아</p>
+                <span class="one"></span>
+                <span class="two"></span>
+                <span class="three"></span>
+                <span class="four"></span>
+            </div>
+            <div id="us" class="link-wrapper select" data-main="us">
+                <p>미국</p>
+                <span class="one"></span>
+                <span class="two"></span>
+                <span class="three"></span>
+                <span class="four"></span>
+            </div>
+            <div id="europe" class="link-wrapper select" data-main="europe">
+                <p>유럽</p>
+                <span class="one"></span>
+                <span class="two"></span>
+                <span class="three"></span>
+                <span class="four"></span>
+            </div>
+            <div id="america" class="link-wrapper select" data-main="america">
+                <p>아메리카</p>
+                <span class="one"></span>
+                <span class="two"></span>
+                <span class="three"></span>
+                <span class="four"></span>
+            </div>
+            <div id="etc" class="link-wrapper select" data-main="etc">
+                <p>기타</p>
+                <span class="one"></span>
+                <span class="two"></span>
+                <span class="three"></span>
+                <span class="four"></span>
+            </div>
+        </div>
+        <div class="container">
+            {% autoescape off %}
+            {{ list_div }}
+            {% endautoescape %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

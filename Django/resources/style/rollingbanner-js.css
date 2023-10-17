@@ -1,0 +1,168 @@
+/* 하나금융그룹 폰트 */
+@font-face {
+    font-family: Hana2-Light;
+    src: url('../font/Hana2.0_TTF/Hana2-Light.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Hana2-Regular;
+    src: url('../font/Hana2.0_TTF/Hana2-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Hana2-Medium;
+    src: url('../font/Hana2.0_TTF/Hana2-Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Hana2-Bold;
+    src: url('../font/Hana2.0_TTF/Hana2-Bold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Hana2-Heavy;
+    src: url('../font/Hana2.0_TTF/Hana2-Heavy.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: Hana2-CM;
+    src: url('../font/Hana2.0_TTF/Hana2-CM.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 오뮤_다예쁨체;
+    src: url('../font/Hana2.0_TTF/오뮤_다예쁨체.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.rollingbanner {
+    width: 100%;
+    height: 2.5vw;
+    min-height: 20px;
+    font-size: 1.1vw;
+    font-family: Hana2-Medium;
+    color: #fafbfb;
+    background-color: #339495;
+}
+
+.rollingbanner>.wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.wrap::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2.5vw;
+    height: 100%;
+    z-index: 1;
+    background: linear-gradient(to right, #339495, #33949577, #33949500);
+}
+
+.wrap::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2.5vw;
+    height: 100%;
+    z-index: 1;
+    background: linear-gradient(to right, #33949500, #33949577, #339495);
+}
+
+/* 애니메이션하는 요소 */
+.roller {
+    position: absolute;
+    height: 100%;
+}
+
+.roller>ul {
+    margin: 0;
+    height: 100%;
+    list-style: none;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    color: #fafbfb;
+    padding: 0;
+}
+
+.roller>ul>li {
+    margin-right: 5vw;
+    display: flex;
+    flex-direction: row;
+    width: 20vw;
+    height: 100%;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-weight: bold;
+}
+
+.roller>ul>li span {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    width: 3vw;
+}
+
+.roller>ul>li .status {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.roller>ul>li pre {
+    display: flex;
+    height: 100%;
+    margin: 0 auto;
+    align-items: center;
+    justify-content: center;
+}
+
+.roller>ul>li .status.up svg {
+    width: 1.5vw;
+    transform: rotateZ(-45deg);
+}
+
+.roller>ul>li .status.down svg {
+    width: 1.5vw;
+    transform: rotateZ(45deg);
+}
+
+.status.up .arrow-path {
+    stroke: rgb(255, 20, 35);
+    fill: none;
+    stroke-linecap: square;
+    stroke-miterlimit: 10;
+    stroke-width: 48;
+}
+
+.status.down .arrow-path {
+    stroke: rgb(35, 20, 255);
+    fill: none;
+    stroke-linecap: square;
+    stroke-miterlimit: 10;
+    stroke-width: 48;
+}

@@ -1,0 +1,52 @@
+{% load static %}
+<nav>
+    <div class="container">
+        <div class="img_wrapper link-wrapper" data-href="{% url 'dataCenter:index' %}">
+            <img src="{% static 'img/logo2.png' %}">
+        </div>
+        <div>
+            <div class="link-wrapper select" data-href="http://localhost:8080/">
+                <p>하나원클</p>
+                <span class="one"></span>
+                <span class="two"></span>
+                <span class="three"></span>
+                <span class="four"></span>
+            </div>
+            <div class="link-wrapper select" data-href="{% url 'dataCenter:KoreaMarketMap' type='kospi' %}">
+                <p>실시간 마켓맵</p>
+                <span class="one"></span>
+                <span class="two"></span>
+                <span class="three"></span>
+                <span class="four"></span>
+            </div>
+            <div class="link-wrapper select" data-href="{% url 'dataCenter:national' %}">
+                <p>국내</p>
+                <span class="one"></span>
+                <span class="two"></span>
+                <span class="three"></span>
+                <span class="four"></span>
+            </div>
+            <div class="link-wrapper select" data-href="{% url 'dataCenter:foreignal' %}">
+                <p>해외</p>
+                <span class="one"></span>
+                <span class="two"></span>
+                <span class="three"></span>
+                <span class="four"></span>
+            </div>
+            <div class="link-wrapper select" data-href="{% url 'dataCenter:commodities' %}">
+                <p>원자재</p>
+                <span class="one"></span>
+                <span class="two"></span>
+                <span class="three"></span>
+                <span class="four"></span>
+            </div>
+            <div class="link-wrapper select" data-href="{% url 'dataCenter:bonds' %}">
+                <p>채권</p>
+                <span class="one"></span>
+                <span class="two"></span>
+                <span class="three"></span>
+                <span class="four"></span>
+            </div>
+        </div>
+    </div>
+</nav>

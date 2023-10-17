@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTO Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hanaonecle.recommend.model.dao.RecommendMapper">
+    <select id="recommendByOptionTotal" parameterType="com.hanaonecle.recommend.model.dto.RecommendOption" resultType="com.hanaonecle.recommend.model.dto.RecommendResult">
+        SELECT isin, name FROM (
+        select b.name, a.* from
+            (select * from ONECLE_SCORE where work_dt = (SELECT max(work_dt) FROM work_date)) a,
+            (select isin, name from Stock where sector in
+                <foreach collection="selectedSectors" item="sector" open="(" separator="," close=")">
+                    #{sector}
+                </foreach>
+                and ISIN in (
+                    SELECT c.isin FROM
+                    (SELECT isin FROM ohlcv WHERE work_dt = (select max(work_dt) from work_date)
+                        AND (VOLUME >= (SELECT PERCENTILE_CONT(#{VOLUME}) WITHIN GROUP (ORDER BY VOLUME) FROM (select * from ohlcv WHERE work_dt = (select max(work_dt) from work_date))))
+                        AND (UPDOWN >= (SELECT PERCENTILE_CONT(#{UPDOWN}) WITHIN GROUP (ORDER BY UPDOWN) FROM (select * from ohlcv WHERE work_dt = (select max(work_dt) from work_date))))
+                    ) c,
+                    (SELECT isin FROM fundamental WHERE work_dt = (select max(work_dt) from work_date)
+                        AND (EPS >= (SELECT PERCENTILE_CONT(#{EPS}) WITHIN GROUP (ORDER BY EPS) FROM (select * from fundamental WHERE work_dt = (select max(work_dt) from work_date))))
+                        AND (PBR >= (SELECT PERCENTILE_CONT(#{PBR}) WITHIN GROUP (ORDER BY PBR) FROM (select * from fundamental WHERE work_dt = (select max(work_dt) from work_date))))
+                        AND (PER >= (SELECT PERCENTILE_CONT(#{PER}) WITHIN GROUP (ORDER BY PER) FROM (select * from fundamental WHERE work_dt = (select max(work_dt) from work_date))))
+                    ) d
+                    where c.isin = d.isin
+                )
+            ) b
+            where a.isin = b.isin
+            order by a.TOTAL_SCORE desc)
+        where 5 >= ROWNUM
+    </select>
+
+    <select id="recommendByOptionAi" parameterType="com.hanaonecle.recommend.model.dto.RecommendOption" resultType="com.hanaonecle.recommend.model.dto.RecommendResult">
+        SELECT isin, name FROM (
+        select b.name, a.* from
+        (select * from ONECLE_SCORE where work_dt = (SELECT max(work_dt) FROM work_date)) a,
+        (select isin, name from Stock where sector in
+        <foreach collection="selectedSectors" item="sector" open="(" separator="," close=")">
+            #{sector}
+        </foreach>
+        and ISIN in (
+        SELECT c.isin FROM
+        (SELECT isin FROM ohlcv WHERE work_dt = (select max(work_dt) from work_date)
+        AND (VOLUME >= (SELECT PERCENTILE_CONT(#{VOLUME}) WITHIN GROUP (ORDER BY VOLUME) FROM (select * from ohlcv WHERE work_dt = (select max(work_dt) from work_date))))
+        AND (UPDOWN >= (SELECT PERCENTILE_CONT(#{UPDOWN}) WITHIN GROUP (ORDER BY UPDOWN) FROM (select * from ohlcv WHERE work_dt = (select max(work_dt) from work_date))))
+        ) c,
+        (SELECT isin FROM fundamental WHERE work_dt = (select max(work_dt) from work_date)
+        AND (EPS >= (SELECT PERCENTILE_CONT(#{EPS}) WITHIN GROUP (ORDER BY EPS) FROM (select * from fundamental WHERE work_dt = (select max(work_dt) from work_date))))
+        AND (PBR >= (SELECT PERCENTILE_CONT(#{PBR}) WITHIN GROUP (ORDER BY PBR) FROM (select * from fundamental WHERE work_dt = (select max(work_dt) from work_date))))
+        AND (PER >= (SELECT PERCENTILE_CONT(#{PER}) WITHIN GROUP (ORDER BY PER) FROM (select * from fundamental WHERE work_dt = (select max(work_dt) from work_date))))
+        ) d
+        where c.isin = d.isin
+        )
+        ) b
+        where a.isin = b.isin
+        order by a.AI_SCORE desc)
+        where 5 >= ROWNUM
+    </select>
+
+    <select id="recommendByOptionStatistics" parameterType="com.hanaonecle.recommend.model.dto.RecommendOption" resultType="com.hanaonecle.recommend.model.dto.RecommendResult">
+        SELECT isin, name FROM (
+        select b.name, a.* from
+        (select * from ONECLE_SCORE where work_dt = (SELECT max(work_dt) FROM work_date)) a,
+        (select isin, name from Stock where sector in
+        <foreach collection="selectedSectors" item="sector" open="(" separator="," close=")">
+            #{sector}
+        </foreach>
+        and ISIN in (
+        SELECT c.isin FROM
+        (SELECT isin FROM ohlcv WHERE work_dt = (select max(work_dt) from work_date)
+        AND (VOLUME >= (SELECT PERCENTILE_CONT(#{VOLUME}) WITHIN GROUP (ORDER BY VOLUME) FROM (select * from ohlcv WHERE work_dt = (select max(work_dt) from work_date))))
+        AND (UPDOWN >= (SELECT PERCENTILE_CONT(#{UPDOWN}) WITHIN GROUP (ORDER BY UPDOWN) FROM (select * from ohlcv WHERE work_dt = (select max(work_dt) from work_date))))
+        ) c,
+        (SELECT isin FROM fundamental WHERE work_dt = (select max(work_dt) from work_date)
+        AND (EPS >= (SELECT PERCENTILE_CONT(#{EPS}) WITHIN GROUP (ORDER BY EPS) FROM (select * from fundamental WHERE work_dt = (select max(work_dt) from work_date))))
+        AND (PBR >= (SELECT PERCENTILE_CONT(#{PBR}) WITHIN GROUP (ORDER BY PBR) FROM (select * from fundamental WHERE work_dt = (select max(work_dt) from work_date))))
+        AND (PER >= (SELECT PERCENTILE_CONT(#{PER}) WITHIN GROUP (ORDER BY PER) FROM (select * from fundamental WHERE work_dt = (select max(work_dt) from work_date))))
+        ) d
+        where c.isin = d.isin
+        )
+        ) b
+        where a.isin = b.isin
+        order by a.STATISTICS_SCORE desc)
+        where 5 >= ROWNUM
+    </select>
+
+    <select id="recommendTotal" resultType="com.hanaonecle.recommend.model.dto.RecommendResult">
+        SELECT isin, name FROM (
+            select b.name, a.* from
+                (select * from ONECLE_SCORE where work_dt = (SELECT max(work_dt) FROM work_date)) a,
+                (select isin, name from Stock) b
+            where a.isin = b.isin
+            order by a.TOTAL_SCORE desc)
+        WHERE 5 >= ROWNUM
+    </select>
+
+    <select id="recommendKospi" resultType="com.hanaonecle.recommend.model.dto.RecommendResult">
+        SELECT isin, name FROM (
+            select b.name, a.* from
+                (select * from ONECLE_SCORE where work_dt = (SELECT max(work_dt) FROM work_date)) a,
+                (select isin, name from Stock where market_code = 1) b
+            where a.isin = b.isin
+            order by a.TOTAL_SCORE desc)
+        where 5 >= ROWNUM
+    </select>
+
+    <select id="recommendKosdaq" resultType="com.hanaonecle.recommend.model.dto.RecommendResult">
+        SELECT isin, name FROM (
+            select b.name, a.* from
+                (select * from ONECLE_SCORE where work_dt = (SELECT max(work_dt) FROM work_date)) a,
+                (select isin, name from Stock where market_code = 2) b
+            where a.isin = b.isin
+            order by a.TOTAL_SCORE desc)
+        where 5 >= ROWNUM
+    </select>
+
+    <select id="recommendVolume10" resultType="com.hanaonecle.recommend.model.dto.RecommendResult">
+        SELECT isin, name FROM (
+            select b.name, a.* from
+                (select * from ONECLE_SCORE where work_dt = (SELECT max(work_dt) FROM work_date)) a,
+                (select isin, name from Stock where ISIN in (
+                    SELECT isin FROM ohlcv
+                    WHERE work_dt = (select max(work_dt) from work_date)
+                    AND (VOLUME >= (SELECT PERCENTILE_CONT(0.9) WITHIN GROUP (ORDER BY VOLUME) FROM (select * from ohlcv WHERE work_dt = (select max(work_dt) from work_date)))))) b
+            where a.isin = b.isin
+            order by a.TOTAL_SCORE desc)
+        where 5 >= ROWNUM
+    </select>
+
+    <select id="recommendUpdown10" resultType="com.hanaonecle.recommend.model.dto.RecommendResult">
+        SELECT isin, name FROM (
+            select b.name, a.* from
+                (select * from ONECLE_SCORE where work_dt = (SELECT max(work_dt) FROM work_date)) a,
+                (select isin, name from Stock where ISIN in (
+                    SELECT isin FROM ohlcv
+                    WHERE work_dt = (select max(work_dt) from work_date)
+                    AND (UPDOWN >= (SELECT PERCENTILE_CONT(0.9) WITHIN GROUP (ORDER BY UPDOWN) FROM (select * from ohlcv WHERE work_dt = (select max(work_dt) from work_date)))))) b
+            where a.isin = b.isin
+            order by a.TOTAL_SCORE desc)
+        where 5 >= ROWNUM
+    </select>
+
+    <select id="recommendService" resultType="com.hanaonecle.recommend.model.dto.RecommendResult">
+        SELECT isin, name FROM (
+            select b.name, a.* from
+                (select * from ONECLE_SCORE where work_dt = (SELECT max(work_dt) FROM work_date)) a,
+                (select isin, name from Stock where sector in (2, 5, 10, 12, 22, 23, 25, 26, 27, 28, 30, 31, 32, 33)) b
+            where a.isin = b.isin
+            order by a.TOTAL_SCORE desc)
+        where 5 >= ROWNUM
+    </select>
+
+    <select id="recommendManufacturing" resultType="com.hanaonecle.recommend.model.dto.RecommendResult">
+        SELECT isin, name FROM (
+            select b.name, a.* from
+                (select * from ONECLE_SCORE where work_dt = (SELECT max(work_dt) FROM work_date)) a,
+                (select isin, name from Stock where sector in (1, 3, 4, 9, 18, 21)) b
+            where a.isin = b.isin
+            order by a.TOTAL_SCORE desc)
+        where 5 >= ROWNUM
+    </select>
+</mapper>
