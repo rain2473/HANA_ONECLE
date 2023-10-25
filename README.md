@@ -28,7 +28,7 @@
 최종 프로젝트 결과입니다.
 ## * 발표 ppt  
    <img src="ReadMe_img/ppt_cover3.png" width="640" /><br>
-   [최종발표자료](ReadMe_img/2360340022_홍윤기_하나원클_발표자료.pdf)<br>
+   [최종발표자료](ReadMe_img/2360340022_홍윤기_하나원클_발표자료.pdf)<br>
 ## * 시연 동영상
    [![영상](ReadMe_img/ppt_cover4.png)](https://www.youtube.com/watch?v=aEAhlq2G1fo)
    <br>
