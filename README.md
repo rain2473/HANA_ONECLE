@@ -26,7 +26,7 @@
 # 3. 프로젝트 결과
 최종 프로젝트 결과입니다.
 ## * 발표 ppt 
-   <img src="ReadMe_img/ppt_cover3.jpg" width="640" /><br>
+   <img src="ReadMe_img/ppt_cover3.png" width="640" /><br>
    [최종발표자료](/2360340022_홍윤기_하나원클_발표자료.pptx)<br>
 ## * 시연 동영상
    [![영상](ReadMe_img/ppt_cover4.png)](https://www.youtube.com/watch?v=aEAhlq2G1fo)
@@ -72,13 +72,13 @@
 <br> <br>      
 # 5. 응용기술(특화기술)
 Python DataFrame 자료구조와 SQL간의 상호 호환을 위한 Python 모듈 패키지 개발<br> 
-<img src="ReadMe_img/응용1.png" width="640"/><br> 
+<img src="ReadMe_img/adv1.png" width="640"/><br> 
 대용량 Insert 성능개선<br> 
-<img src="ReadMe_img/응용2.png" width="640"/><br> 
+<img src="ReadMe_img/adv2.png" width="640"/><br> 
 ML 모델 개발<br> 
-<img src="ReadMe_img/응용3.png" width="640"/><br> 
+<img src="ReadMe_img/adv3.png" width="640"/><br> 
 NLP 모델 개발<br> 
-<img src="ReadMe_img/응용4.png" width="640"/><br> 
+<img src="ReadMe_img/adv4.png" width="640"/><br> 
 
 <br> <br> 
 
@@ -86,7 +86,7 @@ NLP 모델 개발<br>
 
 |항목|내용||
 |-----|---------------------------|----|
-|이름 |홍윤기| <img src="ReadMe_img/홍윤기.jpg" width="80" />|
+|이름 |홍윤기| <img src="ReadMe_img/hyk.jpg" width="80" />|
 |연락처 | 이메일 | rain2473(@)naver.com|
 |학력사항|졸업(2023.02)|건국대학교 전기전자공학부|
 |자격증| 2022.12.12  | SQLD ( 한국데이터산업진흥원 ) |
