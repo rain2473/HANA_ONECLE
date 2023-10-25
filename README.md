@@ -74,19 +74,19 @@
 # 5. 응용기술(특화기술)
 Python DataFrame 자료구조와 SQL간의 상호 호환을 위한 Python 모듈 패키지 개발<br> 
 
-   <img src="/ReadMe_img/adv1.png" width="640"/><br> 
+   <img src="ReadMe_img/adv12.png" width="640"/><br> 
 
 대용량 Insert 성능개선<br> 
 
-   <img src="/ReadMe_img/adv2.png" width="640"/><br> 
+   <img src="ReadMe_img/adv22.png" width="640"/><br> 
 
 ML 모델 개발<br> 
 
-   <img src="/ReadMe_img/adv3.png" width="640"/><br> 
+   <img src="ReadMe_img/adv32.png" width="640"/><br> 
 
 NLP 모델 개발<br> 
 
-   <img src="/ReadMe_img/adv4.png" width="640"/><br> 
+   <img src="ReadMe_img/adv42.png" width="640"/><br> 
 
 <br> <br> 
 
