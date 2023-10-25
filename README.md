@@ -21,14 +21,14 @@
    [제안발표자료](ReadMe_img/2360340022_홍윤기_HANA-ONE클STOCK_프로젝트제안서.pdf)<br>
 하나원클의 초기 프로젝트 수행 계획서입니다.
    <img src="ReadMe_img/ppt_cover2.png" width="640" /><br>
-   [수행계획서](ReadMe_img/2360340022_홍윤기_프로젝트수행계획서.pdf)<br>
+   [수행계획서](ReadMe_img/2360340022_홍윤기_프로젝트수행계획서.pdf)<br>
 <br> <br> 
 
 # 3. 프로젝트 결과
 최종 프로젝트 결과입니다.
 ## * 발표 ppt  
    <img src="ReadMe_img/ppt_cover3.png" width="640" /><br>
-   [최종발표자료](ReadMe_img/2360340022_홍윤기_하나원클_발표자료.pdf)<br>
+   [최종발표자료](ReadMe_img/2360340022_홍윤기_하나원클_발표자료.pdf)<br>
 ## * 시연 동영상
    [![영상](ReadMe_img/ppt_cover4.png)](https://www.youtube.com/watch?v=aEAhlq2G1fo)
    <br>
